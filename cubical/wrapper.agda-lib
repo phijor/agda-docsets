@@ -1,0 +1,4 @@
+name: wrapper
+depend: cubical
+include: .
+flags: --cubical --guardedness

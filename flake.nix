@@ -18,31 +18,20 @@
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        agda-index = inputs.agda-index.packages.${system}.agda-index;
+        lib = pkgs.callPackage ./lib { inherit agda-index; };
+
         cubical-doc = pkgs.callPackage ./cubical { };
         standard-library-doc = pkgs.callPackage ./standard-library { };
 
-        agda-index = inputs.agda-index.packages.${system}.agda-index;
-
-        mkDocs =
-          drv:
-          let
-            inherit (drv) name;
-          in
-          pkgs.runCommand "${name}-docset" { } ''
-            ${agda-index}/bin/agda-index ${drv.html} \
-              --output-format docset \
-              --library-name ${name}
-            mkdir -p "$out"
-            cp -r ${name}.docset "$out/"
-          '';
-
         docsets = {
-          cubical-docset = mkDocs cubical-doc;
-          standard-library-docset = mkDocs standard-library-doc;
+          cubical-docset = lib.mkDocset cubical-doc { name = "cubical"; };
+          standard-library-docset = lib.mkDocset standard-library-doc { name = "standard-library"; };
         };
       in
       {
         packages = {
+          inherit agda-index;
           default = pkgs.linkFarm "agda-docsets" docsets;
         } // docsets;
       }

@@ -11,7 +11,13 @@
       htmlDirectory ? lib.getOutput "html" drv,
       mainPage ? "index.html",
     }:
-    runCommand "${name}-docset" { } ''
+    let
+      meta = {
+        description = "Dash/Zeal docset for the Agda library '${name}'";
+        license = lib.licenses.mit;
+      };
+    in
+    runCommand "${name}-docset" { inherit meta; } ''
       ${agda-index}/bin/agda-index ${htmlDirectory} \
         --output-format docset \
         --main-page ${mainPage} \

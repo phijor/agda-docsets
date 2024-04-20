@@ -25,8 +25,14 @@
         standard-library-doc = pkgs.callPackage ./standard-library { };
 
         docsets = {
-          cubical-docset = lib.mkDocset cubical-doc { name = "cubical"; };
-          standard-library-docset = lib.mkDocset standard-library-doc { name = "standard-library"; };
+          cubical-docset = lib.mkDocset cubical-doc {
+            name = "cubical";
+            mainPage = "Cubical.README.html";
+          };
+          standard-library-docset = lib.mkDocset standard-library-doc {
+            name = "standard-library";
+            mainPage = "README.html";
+          };
         };
       in
       {

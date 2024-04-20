@@ -6,11 +6,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1713304151,
-        "narHash": "sha256-RuOmSKKR805II01vTfE8rCM2+0QRU8PzqvsstCysoOI=",
+        "lastModified": 1713619491,
+        "narHash": "sha256-GTP+hzEQ0sBDys1gEdtDBxBVE6z/JIBAAnyubIv2Qw0=",
         "owner": "phijor",
         "repo": "agda-index",
-        "rev": "6f0a38726d49ae7ef592573dc00065c642f14f72",
+        "rev": "edae738120ed29244d1df3bdc3ec44e846faecd1",
         "type": "github"
       },
       "original": {

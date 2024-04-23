@@ -1,0 +1,61 @@
+name: Build and deploy Docset site
+
+on:
+  push:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  # Build job
+  docsets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Check out repository"
+        uses: actions/checkout@v4
+      - name: "Install Nix"
+        uses: DeterminateSystems/nix-installer-action@v10
+      - name: "Set up Nix cache"
+        uses: DeterminateSystems/magic-nix-cache-action@v4
+      - name: Build Agda Docsets
+        run: |
+          nix build
+      - name: Setup Pages
+        id: setup-pages
+        uses: actions/configure-pages@v5
+      - name: Make website from template
+        env:
+          BASE_URL: ${{ steps.setup-pages.outputs.base_url }}
+        run: |
+          DOCSETS=$(find -L ./result -name '*.docset')
+          echo "Base URL: ${BASE_URL}"
+          echo "Docsets: ${DOCSETS}"
+          nix run '.#make-site' -- \
+            --dest-dir public \
+            --static-dir static \
+            "${BASE_URL}" \
+            ${DOCSETS}
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  # Deployment job
+  deploy:
+    # Allow one concurrent deployment
+    concurrency:
+      group: "deployment"
+      cancel-in-progress: true
+    name: "Deploy rendered book to Pages"
+    if: success() && github.ref == 'refs/heads/main'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: docsets
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

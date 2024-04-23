@@ -57,7 +57,7 @@ def make_site(dest_dir: str, template_path: str, docsets: list[Docset]):
         )
     index_path = f"{dest_dir}/{os.path.basename(template_path)}"
 
-    print(f"Writing HTML index '{template_path}' from template at '{template_path}'")
+    print(f"Writing HTML index '{index_path}' from template at '{template_path}'")
     with open(template_path, mode="r", encoding="utf-8") as template, open(
         index_path, mode="w", encoding="utf-8"
     ) as index:

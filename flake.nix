@@ -33,6 +33,14 @@
             name = "standard-library";
             mainPage = "README.html";
           };
+          make-site = pkgs.stdenv.mkDerivation {
+            name = "make-site";
+            propagatedBuildInputs = [ pkgs.python3 ];
+            dontUnpack = true;
+            installPhase = ''
+              install -Dm755 ${./lib/make-site.py} $out/bin/make-site
+            '';
+          };
         };
       in
       {
